@@ -2,8 +2,8 @@ const Joi = require("joi");
 const express = require("express");
 const app = express();
 
-app.use(express.json());  //Middleware. Το χρησιμοποιούμε για να 
-                          //μετατρέψουμε σε json τα δεδομένα που μας στέλνουν
+app.use(express.json());               //Middleware. Το χρησιμοποιούμε για να 
+                                       //μετατρέψουμε σε json τα δεδομένα που μας στέλνουν
 
 const movies = [
     { id: 1, title: "John Wick" },
@@ -20,8 +20,8 @@ const genres = [
     {id: 7, genre: "Musical" }
  ];  
 
-app.get("/movies", (request, response) => {
-    response.send(movies);    //Στέλνουμε στην απάντηση όλο τον πίνακα ταινιών
+app.get("/movies", (request, response) => {         //Στέλνουμε ως απάντηση ολο τον πινακα..      
+    response.send(movies);           
 });
 
 //Στελνουμε ως απαντηση μια ταινια με συγκεκριμένο ID
