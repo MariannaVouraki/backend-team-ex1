@@ -61,14 +61,14 @@ app.put("/movies/:id", (request, response) => {
 
     const { error } = validateMovie(request.body);  //result.error 
     //Αν ειναι ακυρη τοτε επιστρεφω 400 - Bad request
-    if (error) return result.status(400).send(error.details[0].messege); 
+    if (error) return response.status(400).send(error.details[0].messege); 
 
     movie.title = request.body.title;//Ενημερώνω τον πινακα με τις ταινιες 
     response.send(movie); //Επιστρεφω την νεα  ταινια 
 
 });
 
-app.delete("/movies/:id", (Request, response) => {
+app.delete("/movies/:id", (request, response) => {
     const movie = movies.find(c => c.id === parserInt(request.params.id));             // Ψαχνω για την ταινια 
     if (!movie) return result.status(404).send("The movie with the given ID was not found");   // Αν δεν υπαρχει , επιστρεφει 404 
 
@@ -86,35 +86,36 @@ function validateMovie(movie){
 
     return Joi.validate(movie, schema);
 }
-// Εδω εφαρμόζουμε τις ίδιες μεθόδους CRUD για το πινακα genres...
+// !!Εδω εφαρμόζουμε τις ίδιες μεθόδους CRUD για το πινακα genres!!
 
-app.get("/genres", (req, res) => {
-    resp.send(genres);    //Στέλνουμε στην απάντηση όλο τον πίνακα με τα ειδη των ταινιών
+app.get("/genres", (request, result) => {
+    result.send(genres);    //Στέλνουμε στην απάντηση όλο τον πίνακα με τα ειδη των ταινιών
     });
-app.get("/genres/:id", (req, res) => {
-    const genre = genres.find(c => c.id === parserInt(req.params.id));             // Ψαχνω για  ειδος 
+
+app.get("/genres/:id", (request, result) => {
+    const genre = genres.find(c => c.id === parserInt(request.params.id));             // Ψαχνω για  ειδος 
     if (!genre) return result.status(404).send("The movie with the given ID was not found");   // Αν δεν υπαρχει , επιστρεφει 404 
-    res.send(genre);//Αλλιως επιστρεφει το ειδος
+    result.send(genre);//Αλλιως επιστρεφει το ειδος
 });
-app.post("/genres", (req, res) => {
-    const { error } = validateGerne(req.body);  //result.error 
+app.post("/genres", (request, result) => {
+    const { error } = validateGerne(request.body);  //result.error 
     //Αν ειναι ακυρη τοτε επιστρεφω 400 - Bad request
     if (error) return result.status(400).send(error.details[0].messege); 
 
     const gerne = {
         id: genres.length + 1,   //Βάζουμε ως id το μέγεθος του πίνακα + 1
-        title: req.body.title  //Παίρνουμε τον τίτλο από το σώμα της αίτησης HTTP
+        title: request.body.title  //Παίρνουμε τον τίτλο από το σώμα της αίτησης HTTP
     };
 
   //Έλεγχος αν μας έστειλαν τον τίτλο της ταινίας στο σώμα της αίτησης
   //Αν όχι, επιστρέφουμε κωδικό 400 (Bad request), και μήνυμα λάθους
-    if (!req.body.title || req.body.title.length < 4) {
-        return res.status(400).send("Title is required and should de minimum 5 characters.");
+    if (!request.body.title || request.body.title.length < 4) {
+        return result.status(400).send("Title is required and should de minimum 5 characters.");
   } 
   
   //Προσθέτουμε τη νέα ταινία στον πίνακα και την επιστρέφουμε στην απάντηση
     genres.push(gerne);
-    res.send(genre);
+    result.send(genre);
 });
 app.put("/genres/:id", (request, response) => {
     const genre = genres.find(c => c.id === parserInt(request.params.id));             // Ψαχνω για την ταινια 
@@ -138,7 +139,7 @@ app.delete("/genres/:id", (Request, response) => {
     response.send(genre);//Επιστρεφω το ειδος 
 });
 // Εδω για καποιο λογο δεν δεχεται το ονομα της συναρτησης..
-function ValidateGenre(genre){
+function validateGenre(genre){
     const schema = {
         name: Joi.string().min(5).required()
     };
